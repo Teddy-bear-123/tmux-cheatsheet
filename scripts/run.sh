@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 
-# Get the current directory of the script
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARENT_DIR="$(dirname "$CURRENT_DIR")"
+BINARY_PATH="$PARENT_DIR/target/release/tmux-cheatsheet"
 
-# Path to the Rust binary
-BINARY_PATH="$CURRENT_DIR/../target/release/tmux-cheatsheet"
+# Check if binary exists
+if [ ! -f "$BINARY_PATH" ]; then
+    tmux display-message "Error: Cheatsheet binary not found. Try rebuilding the plugin."
+    exit 1
+fi
 
-# Check if the Rust binary exists
-if [[ -f "$BINARY_PATH" ]]; then
-    # Run the Rust binary to display the cheatsheet
-    "$BINARY_PATH" && notify-send "Tmux Cheatsheet" "Cheatsheet displayed"
-else
-    echo "Error: Tmux cheatsheet binary not found at $BINARY_PATH"
-    notify-send "Error" "Tmux cheatsheet binary not found"
+# Check if binary is executable
+if [ ! -x "$BINARY_PATH" ]; then
+    chmod +x "$BINARY_PATH"
+fi
+
+# Run the binary and capture any errors
+if ! "$BINARY_PATH"; then
+    tmux display-message "Error: Failed to display cheatsheet"
+    exit 1
 fi
 
