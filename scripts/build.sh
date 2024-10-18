@@ -1,26 +1,18 @@
 #!/usr/bin/env bash
 
+# Get the directory where the script is located
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get the parent directory (main project directory)
 PARENT_DIR="$(dirname "$CURRENT_DIR")"
-BINARY_PATH="$PARENT_DIR/target/release/tmux-cheatsheet"
 
-# Check if binary exists
-if [ ! -f "$BINARY_PATH" ]; then
-    tmux display-message "Error: Cheatsheet binary not found. Rebuilding the plugin, Try running it again." 
-    # run the build script  
-    cd "$PARENT_DIR" && ./scripts/build.sh
+# Navigate to the project directory and build the Rust project in release mode
+cd "$PARENT_DIR" && cargo build --release
+
+# Check if the build was successful
+if [ $? -eq 0 ]; then
+    echo "✓ Successfully built tmux-cheatsheet"
+else
+    echo "✗ Failed to build tmux-cheatsheet"
     exit 1
 fi
-
-# Check if binary is executable
-if [ ! -x "$BINARY_PATH" ]; then
-    chmod +x "$BINARY_PATH"
-fi
-
-# Run the binary and capture any errors
-if ! "$BINARY_PATH"; then
-    tmux display-message "Error: Failed to display cheatsheet"
-    exit 1
-fi
-
 
