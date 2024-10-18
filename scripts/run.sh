@@ -7,6 +7,7 @@ BINARY_PATH="$PARENT_DIR/target/release/tmux-cheatsheet"
 # Check if binary exists
 if [ ! -f "$BINARY_PATH" ]; then
     tmux display-message "Error: Cheatsheet binary not found. Try rebuilding the plugin."
+    cd "$PARENT_DIR" && ./build.sh
     exit 1
 fi
 
