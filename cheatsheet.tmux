@@ -5,7 +5,7 @@ set_cheatsheet_keybindings() {
     local key_bindings=$(get_tmux_option "@cheatsheet" "$default_cheatsheet_key")
     local key
     for key in $key_bindings; do
-        tmux bind-key "$key" run-shell "$CURRENT_DIR/scripts/run.sh"
+        tmux bind-key "$key" run-shell "$CURRENT_DIR/scripts/run.sh && notify-send 'Cheatsheet' 'Cheatsheet displayed'"
     done
 }
 
